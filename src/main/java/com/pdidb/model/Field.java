@@ -6,6 +6,7 @@ public class Field implements Cloneable{
 	private String dataLength;
 	private String dataDefault;
 	private String nullable;
+	private String comments;
 	private String dataValue;
 	private String autoGenId;
 	private String multiRow;
@@ -48,6 +49,12 @@ public class Field implements Cloneable{
 	}
 	public void setNullable(String nullable) {
 		this.nullable = nullable;
+	}
+	public String getComments() {
+		return comments;
+	}
+	public void setComments(String comments) {
+		this.comments = comments;
 	}
 	public String getDataValue() {
 		return dataValue;

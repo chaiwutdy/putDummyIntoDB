@@ -1,4 +1,6 @@
 package com.pdidb.config;
+import java.nio.charset.Charset;
+
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -7,6 +9,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -21,7 +24,7 @@ import com.pdidb.util.Utils;
 @ComponentScan({ "com.pdidb.web" })
 @MapperScan("com.pdidb.mapper")
 public class SpringWebConfig extends WebMvcConfigurerAdapter{
-
+		
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry){
 		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
@@ -58,5 +61,11 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter{
      sqlSessionFactory.setDataSource(dataSource());
      return (SqlSessionFactory) sqlSessionFactory.getObject();
    }
+	 
+	 @Bean
+	 public StringHttpMessageConverter stringHttpMessageConverter() {
+	     return new StringHttpMessageConverter(Charset.forName("UTF-8"));
+	 }
+	 
 	 
 }

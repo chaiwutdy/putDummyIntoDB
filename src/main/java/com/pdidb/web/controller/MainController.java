@@ -1,5 +1,7 @@
 package com.pdidb.web.controller;
 
+import java.io.UnsupportedEncodingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -24,7 +26,7 @@ public class MainController {
 	}
 	
 	@RequestMapping(value ="/getFields" , method = RequestMethod.GET)
-	public String getFields(@RequestParam("tableName") String tableName, ModelMap model){
+	public String getFields(@RequestParam("tableName") String tableName, ModelMap model) throws UnsupportedEncodingException{
 		RowData rowData = mainService.getRowData(tableName);
 		model.addAttribute("rowData", rowData);
 		return ViewResolverConstant.ADD_DATA;

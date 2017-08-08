@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>   
 <%@taglib uri = "http://www.springframework.org/tags/form" prefix = "form"%>
@@ -34,14 +34,14 @@
   <nav>
     <ul class="nav nav-pills pull-right">
       <li role="presentation" class="active"><a href="#">Home</a></li>
-      <li role="presentation"><a href="#">About</a></li>
-      <li role="presentation"><a href="#">Contact</a></li>
+      <!-- <li role="presentation"><a href="#">About</a></li>
+      <li role="presentation"><a href="#">Contact</a></li> -->
     </ul>
   </nav>
   <h3 class="text-muted">PUT DATA INTO DATABASE</h3>
 </div>
 
-<form:form id="myForm" method = "GET" action = "/putDummyIntoDB/getFields" >
+<form id="myForm" method = "GET" action = "/putDummyIntoDB/getFields" >
 <div class="jumbotron">
   <h3>Search Table</h3>
   <p>
@@ -54,7 +54,7 @@
   	<button id ="myButton" class="btn btn-sm btn-success" type="button" >Search</button>
   </p>
 </div>
-</form:form>
+</form>
 </div>
 
 <spring:url value="/resources/core/js/bootstrap.min.js" var="bootstrapJs" />
@@ -66,6 +66,11 @@
 	 	$("#myButton").click(function() {
 	 	    $("#myForm").submit();
        	});
+	 	
+	 	$("#tableName").keyup(function() {
+	 	   $(this).val( $(this).val().toUpperCase());
+       	});
+	 	
 	});
 </script>
 </body>

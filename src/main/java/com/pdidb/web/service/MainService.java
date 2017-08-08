@@ -16,7 +16,7 @@ public class MainService {
 	private DBMapper dbMapper;
 
 	public RowData getRowData(String tableName){
-		List<Field> fields = dbMapper.getFieldByTableName(tableName);
+		List<Field> fields = dbMapper.getFieldByTableName2(tableName);
 		RowData rowData = new RowData();
 		rowData.setTableName(tableName);
 		rowData.setFields(fields);

@@ -29,6 +29,7 @@
     background-color: white;
 }
 </style>
+
 </head>
 <body>
 <br>
@@ -36,12 +37,12 @@
 <div class="header clearfix">
   <nav>
     <ul class="nav nav-pills pull-right">
-      <li role="presentation" class="active"><a href="/putDummyIntoDB">Home</a></li>
-      <li role="presentation"><a href="#">About</a></li>
-      <li role="presentation"><a href="#">Contact</a></li>
+      <li role="presentation"><a href="/putDummyIntoDB">Home</a></li>
+      <li role="presentation" class="active"><a href="#">AddData</a></li>
     </ul>
   </nav>
   <h3 class="text-muted">PUT DATA INTO DATABASE</h3>
+  	
 </div>
 
 <div class="jumbotron">
@@ -65,9 +66,13 @@
   </c:if>
 	<c:if test="${not empty rowData}">
 	
-		<form:form id="myForm" method = "POST" action = "/putDummyIntoDB/addData" modelAttribute="rowData">
+		<form:form id="insertForm" method = "POST" action = "/putDummyIntoDB/addData" modelAttribute="rowData" acceptCharset="UTF-8">
 			<h3>TABLE:<c:out value="${rowData.tableName}"/></h3>
-			<input type="hidden" name="tableName" value="${rowData.tableName}"/>
+			<input type="hidden" id="tableName" name="tableName" value="${rowData.tableName}"/>
+			<p>
+			<button id ="manualButton" class="btn btn-sm btn-success" data-toggle="modal" data-target="#manual" type="button" >Manual</button>
+			<button id ="showData" class="btn btn-sm btn-success" type="button" >Show Data</button> 
+			</p>
 			<table class="table table-bordered table-hover">
 				<thead class="bg-primary">
 				<tr >
@@ -83,7 +88,7 @@
 				
 				<tbody>
 				<c:forEach items="${rowData.fields}" var="field" varStatus="status">
-				<tr class="bg-white">
+				<tr class="bg-white" data-toggle="tooltip" title="${field.comments}">
 					<td align="center">
 					<c:choose>
 					<c:when test="${field.autoGenId == 'Y'}">
@@ -96,7 +101,7 @@
 						<input type="checkbox" index ="${status.index}" 
 						id="autoGenId_${status.index}" 
 						name="fields[${status.index}].autoGenId" 
-						value="Y" />
+						value="Y"/>
 					</c:otherwise>
 					</c:choose>
 					</td>
@@ -154,14 +159,46 @@
 				</tbody>
 				
 			</table>
-			<p>
-				<button id ="myButton" class="btn btn-sm btn-success" type="button" >Insert Data</button>
-			</p>
+			<button id ="insertButton" class="btn btn-sm btn-success" type="button" >Insert Data</button>
+			
 		</form:form>
 	</c:if>
 	</div>
 </div>
 
+	
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="manual" role="dialog">
+    <div class="modal-dialog">    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Manual</h4>
+        </div>
+        <div class="modal-body">
+        <ul>
+        	<li>
+        		<p>AutoGenId ติ๊กเลือกเพื่อให้ระบบสร้าง KeyId ให้ </p>
+          		<p>โดยข้อมูล ตัวอย่างที่ได้คือ 000068d1-f2e4-4953-b1c9-953e929aa777</p>
+        	</li>
+        	<li>
+        		<p>MultiRow ติ๊กเลือกเพื่อให้ระบบแยกสร้างข้อมูลหลายแถว </p>
+          		<p>โดยข้อมูลตัวอย่างที่ต้องกรอกคือ xxx1,xxxx2</p>
+          		<p>ระบบจะแบ่งจำนวนแถวข้อมูลตามเครื่องหมาย  ","</p>
+        	</li>
+        </ul>
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
 </div>
 
 <spring:url value="/resources/core/js/bootstrap.min.js" var="bootstrapJs" />
@@ -169,8 +206,44 @@
 <script src="${jqueryJs}"></script>
 <script src="${bootstrapJs}"></script>
 <script type="text/javascript">
+
+function display(data) {
+	alert(JSON.stringify(data));
+	var json = JSON.stringify(data, null, 4) ;
+	alert(json);
+}
+
+function getData(){
+	
+	var tableName = $('#tableName').val();
+	var data = {"tableName":"Test"}
+	$.ajax({
+		type : "GET",
+		contentType : "application/json",
+		url : "/putDummyIntoDB/getData",
+		data : {"tableName":tableName},
+		dataType : 'json',
+		timeout : 100000,
+		success : function(data) {
+			console.log("SUCCESS: ", data);
+			
+			display(data);
+		},
+		error : function(e) {
+			console.log("ERROR: ", e);
+			display(e);
+			
+		},
+		done : function(e) {
+			console.log("DONE");
+			//enableSearchButton(true);
+		}
+	});
+}
+
 	$(document).ready(function(){
-		
+		$('[data-toggle="tooltip"]').tooltip();   
+		 
 		$('[id^="nullable_"]').each(function() {
 			var index = $(this).attr("index");
 			if($(this).val() =='N'){
@@ -208,11 +281,20 @@
 		    }
 		});
 		
-		$("#myButton").click(function() {
-           $("#myForm").submit();
+		$("#insertButton").click(function() {
+           $("#insertForm").submit();
        	});
 		
+		
+		$("#showData").click(function() {
+			getData();
+			
+		});
+		
+
 	});
+	
+	
 </script>
 </body>
 </html>

@@ -17,6 +17,47 @@ public class DBService {
 	@Autowired
 	private DBMapper dbMapper;
 
+	public List<RowData> getData(String tableName){
+		List<RowData> rows = new ArrayList<RowData>();
+		
+		List<Field> columnHeader = dbMapper.getFieldByTableName2(tableName);
+		
+		List<Field> columnData = new ArrayList<Field>();
+		List<Field> fs;
+		for(Field field:columnHeader){
+//			fs = dbMapper.getFieldValuesByTableName(tableName ,field);
+//			System.out.println(fs.size());
+//			columnData.addAll(fs);
+			fs = dbMapper.getFieldByTableName2(tableName);
+			System.out.println(fs.size());
+		}
+	
+		rows.add(getRowData(tableName, columnHeader, columnData));
+		rows.add(getRowData(tableName, columnHeader, columnData));
+		return rows;
+		
+	}
+	
+	public RowData getRowData(String tableName,List<Field> columns, List<Field> columnData){
+		RowData row = new RowData();
+		row.setTableName(tableName);
+		
+		List<Field> fields = new ArrayList<Field>();
+		for(Field f:columns){
+			for(Field fd:columnData){
+				if(f.getColumnName().equalsIgnoreCase(fd.getColumnName()) && !"read".equals(fd.getDataDefault()) ){
+					fd.setDataDefault("read");
+					fields.add(f);
+					break;
+				}
+				
+			}
+		
+		}
+		row.setFields(fields);
+		return row;
+	}
+	
 	public int addData(RowData rowData){
 		int result = 0;
 		if(checkCreateMultiRow(rowData.getFields())){
